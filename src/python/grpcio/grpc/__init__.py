@@ -21,6 +21,10 @@ import six
 
 from grpc._cython import cygrpc as _cygrpc
 
+import logging
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+
 ############################## Future Interface  ###############################
 
 
