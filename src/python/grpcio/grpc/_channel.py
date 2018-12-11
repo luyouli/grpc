@@ -25,7 +25,6 @@ from grpc._cython import cygrpc
 from grpc.framework.foundation import callable_util
 
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.addHandler(logging.NullHandler())
 
 _USER_AGENT = 'grpc-python/{}'.format(_grpcio_metadata.__version__)
 
@@ -176,6 +175,7 @@ def _event_handler(state, response_deserializer):
     return handle_event
 
 
+#pylint: disable=too-many-statements
 def _consume_request_iterator(request_iterator, state, call, request_serializer,
                               event_handler):
     if cygrpc.is_fork_support_enabled():
