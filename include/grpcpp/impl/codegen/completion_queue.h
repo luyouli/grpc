@@ -41,6 +41,10 @@
 
 struct grpc_completion_queue;
 
+namespace grpc_impl {
+
+class ServerBuilder;
+}
 namespace grpc {
 
 template <class R>
@@ -63,7 +67,6 @@ class ChannelInterface;
 class ClientContext;
 class CompletionQueue;
 class Server;
-class ServerBuilder;
 class ServerContext;
 class ServerInterface;
 
@@ -84,6 +87,8 @@ template <StatusCode code>
 class ErrorMethodHandler;
 template <class InputMessage, class OutputMessage>
 class BlockingUnaryCallImpl;
+template <class Op1, class Op2, class Op3, class Op4, class Op5, class Op6>
+class CallOpSet;
 }  // namespace internal
 
 extern CoreCodegenInterface* g_core_codegen_interface;
@@ -278,6 +283,10 @@ class CompletionQueue : private GrpcLibraryCodegen {
   // Friends that need access to constructor for callback CQ
   friend class ::grpc::Channel;
 
+  // For access to Register/CompleteAvalanching
+  template <class Op1, class Op2, class Op3, class Op4, class Op5, class Op6>
+  friend class ::grpc::internal::CallOpSet;
+
   /// EXPERIMENTAL
   /// Creates a Thread Local cache to store the first event
   /// On this completion queue queued from this thread.  Once
@@ -361,7 +370,12 @@ class CompletionQueue : private GrpcLibraryCodegen {
     gpr_atm_no_barrier_fetch_add(&avalanches_in_flight_,
                                  static_cast<gpr_atm>(1));
   }
-  void CompleteAvalanching();
+  void CompleteAvalanching() {
+    if (gpr_atm_no_barrier_fetch_add(&avalanches_in_flight_,
+                                     static_cast<gpr_atm>(-1)) == 1) {
+      g_core_codegen_interface->grpc_completion_queue_shutdown(cq_);
+    }
+  }
 
   grpc_completion_queue* cq_;  // owned
 
@@ -394,7 +408,7 @@ class ServerCompletionQueue : public CompletionQueue {
         polling_type_(polling_type) {}
 
   grpc_cq_polling_type polling_type_;
-  friend class ServerBuilder;
+  friend class ::grpc_impl::ServerBuilder;
   friend class Server;
 };
 

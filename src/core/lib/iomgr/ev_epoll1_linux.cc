@@ -213,7 +213,7 @@ struct grpc_pollset {
      poll */
   bool seen_inactive;
   bool shutting_down;             /* Is the pollset shutting down ? */
-  grpc_closure* shutdown_closure; /* Called after after shutdown is complete */
+  grpc_closure* shutdown_closure; /* Called after shutdown is complete */
 
   /* Number of workers who are *about-to* attach themselves to the pollset
    * worker list */
@@ -1242,7 +1242,14 @@ static void pollset_set_del_pollset_set(grpc_pollset_set* bag,
  * Event engine binding
  */
 
+static bool is_any_background_poller_thread(void) { return false; }
+
 static void shutdown_background_closure(void) {}
+
+static bool add_closure_to_background_poller(grpc_closure* closure,
+                                             grpc_error* error) {
+  return false;
+}
 
 static void shutdown_engine(void) {
   fd_global_shutdown();
@@ -1287,8 +1294,10 @@ static const grpc_event_engine_vtable vtable = {
     pollset_set_add_fd,
     pollset_set_del_fd,
 
+    is_any_background_poller_thread,
     shutdown_background_closure,
     shutdown_engine,
+    add_closure_to_background_poller,
 };
 
 /* Called by the child process's post-fork handler to close open fds, including

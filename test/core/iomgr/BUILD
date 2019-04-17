@@ -81,6 +81,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -92,6 +93,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -103,6 +105,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -128,14 +131,33 @@ grpc_cc_test(
 )
 
 grpc_cc_test(
-    name = "resolve_address_posix_test",
+    name = "resolve_address_using_ares_resolver_posix_test",
     srcs = ["resolve_address_posix_test.cc"],
+    args = [
+        "--resolver=ares",
+    ],
     language = "C++",
     deps = [
         "//:gpr",
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
+)
+
+grpc_cc_test(
+    name = "resolve_address_using_native_resolver_posix_test",
+    srcs = ["resolve_address_posix_test.cc"],
+    args = [
+        "--resolver=native",
+    ],
+    language = "C++",
+    deps = [
+        "//:gpr",
+        "//:grpc",
+        "//test/core/util:grpc_test_util",
+    ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -197,6 +219,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -208,6 +231,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -220,6 +244,7 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -237,12 +262,12 @@ grpc_cc_test(
     name = "tcp_server_posix_test",
     srcs = ["tcp_server_posix_test.cc"],
     language = "C++",
-    tags = ["manual"],  # TODO(adelez): Remove once this works on Foundry.
     deps = [
         "//:gpr",
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
+    tags = ["no_windows"],
 )
 
 grpc_cc_test(
@@ -287,15 +312,5 @@ grpc_cc_test(
         "//:grpc",
         "//test/core/util:grpc_test_util",
     ],
-)
-
-grpc_cc_test(
-    name = "wakeup_fd_cv_test",
-    srcs = ["wakeup_fd_cv_test.cc"],
-    language = "C++",
-    deps = [
-        "//:gpr",
-        "//:grpc",
-        "//test/core/util:grpc_test_util",
-    ],
+    tags = ["no_windows"],
 )

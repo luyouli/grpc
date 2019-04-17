@@ -276,10 +276,10 @@
         'src/core/lib/channel/channelz_registry.cc',
         'src/core/lib/channel/connected_channel.cc',
         'src/core/lib/channel/handshaker.cc',
-        'src/core/lib/channel/handshaker_factory.cc',
         'src/core/lib/channel/handshaker_registry.cc',
         'src/core/lib/channel/status_util.cc',
         'src/core/lib/compression/compression.cc',
+        'src/core/lib/compression/compression_args.cc',
         'src/core/lib/compression/compression_internal.cc',
         'src/core/lib/compression/message_compress.cc',
         'src/core/lib/compression/stream_compression.cc',
@@ -310,6 +310,8 @@
         'src/core/lib/iomgr/gethostname_fallback.cc',
         'src/core/lib/iomgr/gethostname_host_name_max.cc',
         'src/core/lib/iomgr/gethostname_sysconf.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_posix.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_unsupported.cc',
         'src/core/lib/iomgr/internal_errqueue.cc',
         'src/core/lib/iomgr/iocp_windows.cc',
         'src/core/lib/iomgr/iomgr.cc',
@@ -321,7 +323,6 @@
         'src/core/lib/iomgr/is_epollexclusive_available.cc',
         'src/core/lib/iomgr/load_file.cc',
         'src/core/lib/iomgr/lockfree_event.cc',
-        'src/core/lib/iomgr/network_status_tracker.cc',
         'src/core/lib/iomgr/polling_entity.cc',
         'src/core/lib/iomgr/pollset.cc',
         'src/core/lib/iomgr/pollset_custom.cc',
@@ -369,7 +370,6 @@
         'src/core/lib/iomgr/udp_server.cc',
         'src/core/lib/iomgr/unix_sockets_posix.cc',
         'src/core/lib/iomgr/unix_sockets_posix_noop.cc',
-        'src/core/lib/iomgr/wakeup_fd_cv.cc',
         'src/core/lib/iomgr/wakeup_fd_eventfd.cc',
         'src/core/lib/iomgr/wakeup_fd_nospecial.cc',
         'src/core/lib/iomgr/wakeup_fd_pipe.cc',
@@ -409,7 +409,6 @@
         'src/core/lib/transport/metadata.cc',
         'src/core/lib/transport/metadata_batch.cc',
         'src/core/lib/transport/pid_controller.cc',
-        'src/core/lib/transport/service_config.cc',
         'src/core/lib/transport/static_metadata.cc',
         'src/core/lib/transport/status_conversion.cc',
         'src/core/lib/transport/status_metadata.cc',
@@ -464,6 +463,8 @@
         'src/core/lib/security/credentials/oauth2/oauth2_credentials.cc',
         'src/core/lib/security/credentials/plugin/plugin_credentials.cc',
         'src/core/lib/security/credentials/ssl/ssl_credentials.cc',
+        'src/core/lib/security/credentials/tls/grpc_tls_credentials_options.cc',
+        'src/core/lib/security/credentials/tls/spiffe_credentials.cc',
         'src/core/lib/security/security_connector/alts/alts_security_connector.cc',
         'src/core/lib/security/security_connector/fake/fake_security_connector.cc',
         'src/core/lib/security/security_connector/load_system_roots_fallback.cc',
@@ -472,6 +473,7 @@
         'src/core/lib/security/security_connector/security_connector.cc',
         'src/core/lib/security/security_connector/ssl/ssl_security_connector.cc',
         'src/core/lib/security/security_connector/ssl_utils.cc',
+        'src/core/lib/security/security_connector/tls/spiffe_security_connector.cc',
         'src/core/lib/security/transport/client_auth_filter.cc',
         'src/core/lib/security/transport/secure_endpoint.cc',
         'src/core/lib/security/transport/security_handshaker.cc',
@@ -526,21 +528,25 @@
         'src/core/ext/filters/client_channel/client_channel_factory.cc',
         'src/core/ext/filters/client_channel/client_channel_plugin.cc',
         'src/core/ext/filters/client_channel/connector.cc',
+        'src/core/ext/filters/client_channel/global_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/health/health_check_client.cc',
         'src/core/ext/filters/client_channel/http_connect_handshaker.cc',
         'src/core/ext/filters/client_channel/http_proxy.cc',
         'src/core/ext/filters/client_channel/lb_policy.cc',
         'src/core/ext/filters/client_channel/lb_policy_registry.cc',
+        'src/core/ext/filters/client_channel/local_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/parse_address.cc',
         'src/core/ext/filters/client_channel/proxy_mapper.cc',
         'src/core/ext/filters/client_channel/proxy_mapper_registry.cc',
         'src/core/ext/filters/client_channel/resolver.cc',
         'src/core/ext/filters/client_channel/resolver_registry.cc',
         'src/core/ext/filters/client_channel/resolver_result_parsing.cc',
+        'src/core/ext/filters/client_channel/resolving_lb_policy.cc',
         'src/core/ext/filters/client_channel/retry_throttle.cc',
         'src/core/ext/filters/client_channel/server_address.cc',
+        'src/core/ext/filters/client_channel/service_config.cc',
         'src/core/ext/filters/client_channel/subchannel.cc',
-        'src/core/ext/filters/client_channel/subchannel_index.cc',
+        'src/core/ext/filters/client_channel/subchannel_pool_interface.cc',
         'src/core/ext/filters/deadline/deadline_filter.cc',
         'src/core/ext/filters/client_channel/health/health.pb.c',
         'src/core/tsi/fake_transport_security.cc',
@@ -624,6 +630,7 @@
         'test/core/util/subprocess_posix.cc',
         'test/core/util/subprocess_windows.cc',
         'test/core/util/test_config.cc',
+        'test/core/util/test_lb_policies.cc',
         'test/core/util/tracer_util.cc',
         'test/core/util/trickle_endpoint.cc',
         'test/core/util/cmdline.cc',
@@ -637,10 +644,10 @@
         'src/core/lib/channel/channelz_registry.cc',
         'src/core/lib/channel/connected_channel.cc',
         'src/core/lib/channel/handshaker.cc',
-        'src/core/lib/channel/handshaker_factory.cc',
         'src/core/lib/channel/handshaker_registry.cc',
         'src/core/lib/channel/status_util.cc',
         'src/core/lib/compression/compression.cc',
+        'src/core/lib/compression/compression_args.cc',
         'src/core/lib/compression/compression_internal.cc',
         'src/core/lib/compression/message_compress.cc',
         'src/core/lib/compression/stream_compression.cc',
@@ -671,6 +678,8 @@
         'src/core/lib/iomgr/gethostname_fallback.cc',
         'src/core/lib/iomgr/gethostname_host_name_max.cc',
         'src/core/lib/iomgr/gethostname_sysconf.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_posix.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_unsupported.cc',
         'src/core/lib/iomgr/internal_errqueue.cc',
         'src/core/lib/iomgr/iocp_windows.cc',
         'src/core/lib/iomgr/iomgr.cc',
@@ -682,7 +691,6 @@
         'src/core/lib/iomgr/is_epollexclusive_available.cc',
         'src/core/lib/iomgr/load_file.cc',
         'src/core/lib/iomgr/lockfree_event.cc',
-        'src/core/lib/iomgr/network_status_tracker.cc',
         'src/core/lib/iomgr/polling_entity.cc',
         'src/core/lib/iomgr/pollset.cc',
         'src/core/lib/iomgr/pollset_custom.cc',
@@ -730,7 +738,6 @@
         'src/core/lib/iomgr/udp_server.cc',
         'src/core/lib/iomgr/unix_sockets_posix.cc',
         'src/core/lib/iomgr/unix_sockets_posix_noop.cc',
-        'src/core/lib/iomgr/wakeup_fd_cv.cc',
         'src/core/lib/iomgr/wakeup_fd_eventfd.cc',
         'src/core/lib/iomgr/wakeup_fd_nospecial.cc',
         'src/core/lib/iomgr/wakeup_fd_pipe.cc',
@@ -770,7 +777,6 @@
         'src/core/lib/transport/metadata.cc',
         'src/core/lib/transport/metadata_batch.cc',
         'src/core/lib/transport/pid_controller.cc',
-        'src/core/lib/transport/service_config.cc',
         'src/core/lib/transport/static_metadata.cc',
         'src/core/lib/transport/status_conversion.cc',
         'src/core/lib/transport/status_metadata.cc',
@@ -786,21 +792,25 @@
         'src/core/ext/filters/client_channel/client_channel_factory.cc',
         'src/core/ext/filters/client_channel/client_channel_plugin.cc',
         'src/core/ext/filters/client_channel/connector.cc',
+        'src/core/ext/filters/client_channel/global_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/health/health_check_client.cc',
         'src/core/ext/filters/client_channel/http_connect_handshaker.cc',
         'src/core/ext/filters/client_channel/http_proxy.cc',
         'src/core/ext/filters/client_channel/lb_policy.cc',
         'src/core/ext/filters/client_channel/lb_policy_registry.cc',
+        'src/core/ext/filters/client_channel/local_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/parse_address.cc',
         'src/core/ext/filters/client_channel/proxy_mapper.cc',
         'src/core/ext/filters/client_channel/proxy_mapper_registry.cc',
         'src/core/ext/filters/client_channel/resolver.cc',
         'src/core/ext/filters/client_channel/resolver_registry.cc',
         'src/core/ext/filters/client_channel/resolver_result_parsing.cc',
+        'src/core/ext/filters/client_channel/resolving_lb_policy.cc',
         'src/core/ext/filters/client_channel/retry_throttle.cc',
         'src/core/ext/filters/client_channel/server_address.cc',
+        'src/core/ext/filters/client_channel/service_config.cc',
         'src/core/ext/filters/client_channel/subchannel.cc',
-        'src/core/ext/filters/client_channel/subchannel_index.cc',
+        'src/core/ext/filters/client_channel/subchannel_pool_interface.cc',
         'src/core/ext/filters/deadline/deadline_filter.cc',
         'src/core/ext/filters/client_channel/health/health.pb.c',
         'third_party/nanopb/pb_common.c',
@@ -865,6 +875,7 @@
         'test/core/util/subprocess_posix.cc',
         'test/core/util/subprocess_windows.cc',
         'test/core/util/test_config.cc',
+        'test/core/util/test_lb_policies.cc',
         'test/core/util/tracer_util.cc',
         'test/core/util/trickle_endpoint.cc',
         'test/core/util/cmdline.cc',
@@ -878,10 +889,10 @@
         'src/core/lib/channel/channelz_registry.cc',
         'src/core/lib/channel/connected_channel.cc',
         'src/core/lib/channel/handshaker.cc',
-        'src/core/lib/channel/handshaker_factory.cc',
         'src/core/lib/channel/handshaker_registry.cc',
         'src/core/lib/channel/status_util.cc',
         'src/core/lib/compression/compression.cc',
+        'src/core/lib/compression/compression_args.cc',
         'src/core/lib/compression/compression_internal.cc',
         'src/core/lib/compression/message_compress.cc',
         'src/core/lib/compression/stream_compression.cc',
@@ -912,6 +923,8 @@
         'src/core/lib/iomgr/gethostname_fallback.cc',
         'src/core/lib/iomgr/gethostname_host_name_max.cc',
         'src/core/lib/iomgr/gethostname_sysconf.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_posix.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_unsupported.cc',
         'src/core/lib/iomgr/internal_errqueue.cc',
         'src/core/lib/iomgr/iocp_windows.cc',
         'src/core/lib/iomgr/iomgr.cc',
@@ -923,7 +936,6 @@
         'src/core/lib/iomgr/is_epollexclusive_available.cc',
         'src/core/lib/iomgr/load_file.cc',
         'src/core/lib/iomgr/lockfree_event.cc',
-        'src/core/lib/iomgr/network_status_tracker.cc',
         'src/core/lib/iomgr/polling_entity.cc',
         'src/core/lib/iomgr/pollset.cc',
         'src/core/lib/iomgr/pollset_custom.cc',
@@ -971,7 +983,6 @@
         'src/core/lib/iomgr/udp_server.cc',
         'src/core/lib/iomgr/unix_sockets_posix.cc',
         'src/core/lib/iomgr/unix_sockets_posix_noop.cc',
-        'src/core/lib/iomgr/wakeup_fd_cv.cc',
         'src/core/lib/iomgr/wakeup_fd_eventfd.cc',
         'src/core/lib/iomgr/wakeup_fd_nospecial.cc',
         'src/core/lib/iomgr/wakeup_fd_pipe.cc',
@@ -1011,7 +1022,6 @@
         'src/core/lib/transport/metadata.cc',
         'src/core/lib/transport/metadata_batch.cc',
         'src/core/lib/transport/pid_controller.cc',
-        'src/core/lib/transport/service_config.cc',
         'src/core/lib/transport/static_metadata.cc',
         'src/core/lib/transport/status_conversion.cc',
         'src/core/lib/transport/status_metadata.cc',
@@ -1027,21 +1037,25 @@
         'src/core/ext/filters/client_channel/client_channel_factory.cc',
         'src/core/ext/filters/client_channel/client_channel_plugin.cc',
         'src/core/ext/filters/client_channel/connector.cc',
+        'src/core/ext/filters/client_channel/global_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/health/health_check_client.cc',
         'src/core/ext/filters/client_channel/http_connect_handshaker.cc',
         'src/core/ext/filters/client_channel/http_proxy.cc',
         'src/core/ext/filters/client_channel/lb_policy.cc',
         'src/core/ext/filters/client_channel/lb_policy_registry.cc',
+        'src/core/ext/filters/client_channel/local_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/parse_address.cc',
         'src/core/ext/filters/client_channel/proxy_mapper.cc',
         'src/core/ext/filters/client_channel/proxy_mapper_registry.cc',
         'src/core/ext/filters/client_channel/resolver.cc',
         'src/core/ext/filters/client_channel/resolver_registry.cc',
         'src/core/ext/filters/client_channel/resolver_result_parsing.cc',
+        'src/core/ext/filters/client_channel/resolving_lb_policy.cc',
         'src/core/ext/filters/client_channel/retry_throttle.cc',
         'src/core/ext/filters/client_channel/server_address.cc',
+        'src/core/ext/filters/client_channel/service_config.cc',
         'src/core/ext/filters/client_channel/subchannel.cc',
-        'src/core/ext/filters/client_channel/subchannel_index.cc',
+        'src/core/ext/filters/client_channel/subchannel_pool_interface.cc',
         'src/core/ext/filters/deadline/deadline_filter.cc',
         'src/core/ext/filters/client_channel/health/health.pb.c',
         'third_party/nanopb/pb_common.c',
@@ -1096,10 +1110,10 @@
         'src/core/lib/channel/channelz_registry.cc',
         'src/core/lib/channel/connected_channel.cc',
         'src/core/lib/channel/handshaker.cc',
-        'src/core/lib/channel/handshaker_factory.cc',
         'src/core/lib/channel/handshaker_registry.cc',
         'src/core/lib/channel/status_util.cc',
         'src/core/lib/compression/compression.cc',
+        'src/core/lib/compression/compression_args.cc',
         'src/core/lib/compression/compression_internal.cc',
         'src/core/lib/compression/message_compress.cc',
         'src/core/lib/compression/stream_compression.cc',
@@ -1130,6 +1144,8 @@
         'src/core/lib/iomgr/gethostname_fallback.cc',
         'src/core/lib/iomgr/gethostname_host_name_max.cc',
         'src/core/lib/iomgr/gethostname_sysconf.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_posix.cc',
+        'src/core/lib/iomgr/grpc_if_nametoindex_unsupported.cc',
         'src/core/lib/iomgr/internal_errqueue.cc',
         'src/core/lib/iomgr/iocp_windows.cc',
         'src/core/lib/iomgr/iomgr.cc',
@@ -1141,7 +1157,6 @@
         'src/core/lib/iomgr/is_epollexclusive_available.cc',
         'src/core/lib/iomgr/load_file.cc',
         'src/core/lib/iomgr/lockfree_event.cc',
-        'src/core/lib/iomgr/network_status_tracker.cc',
         'src/core/lib/iomgr/polling_entity.cc',
         'src/core/lib/iomgr/pollset.cc',
         'src/core/lib/iomgr/pollset_custom.cc',
@@ -1189,7 +1204,6 @@
         'src/core/lib/iomgr/udp_server.cc',
         'src/core/lib/iomgr/unix_sockets_posix.cc',
         'src/core/lib/iomgr/unix_sockets_posix_noop.cc',
-        'src/core/lib/iomgr/wakeup_fd_cv.cc',
         'src/core/lib/iomgr/wakeup_fd_eventfd.cc',
         'src/core/lib/iomgr/wakeup_fd_nospecial.cc',
         'src/core/lib/iomgr/wakeup_fd_pipe.cc',
@@ -1229,7 +1243,6 @@
         'src/core/lib/transport/metadata.cc',
         'src/core/lib/transport/metadata_batch.cc',
         'src/core/lib/transport/pid_controller.cc',
-        'src/core/lib/transport/service_config.cc',
         'src/core/lib/transport/static_metadata.cc',
         'src/core/lib/transport/status_conversion.cc',
         'src/core/lib/transport/status_metadata.cc',
@@ -1280,21 +1293,25 @@
         'src/core/ext/filters/client_channel/client_channel_factory.cc',
         'src/core/ext/filters/client_channel/client_channel_plugin.cc',
         'src/core/ext/filters/client_channel/connector.cc',
+        'src/core/ext/filters/client_channel/global_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/health/health_check_client.cc',
         'src/core/ext/filters/client_channel/http_connect_handshaker.cc',
         'src/core/ext/filters/client_channel/http_proxy.cc',
         'src/core/ext/filters/client_channel/lb_policy.cc',
         'src/core/ext/filters/client_channel/lb_policy_registry.cc',
+        'src/core/ext/filters/client_channel/local_subchannel_pool.cc',
         'src/core/ext/filters/client_channel/parse_address.cc',
         'src/core/ext/filters/client_channel/proxy_mapper.cc',
         'src/core/ext/filters/client_channel/proxy_mapper_registry.cc',
         'src/core/ext/filters/client_channel/resolver.cc',
         'src/core/ext/filters/client_channel/resolver_registry.cc',
         'src/core/ext/filters/client_channel/resolver_result_parsing.cc',
+        'src/core/ext/filters/client_channel/resolving_lb_policy.cc',
         'src/core/ext/filters/client_channel/retry_throttle.cc',
         'src/core/ext/filters/client_channel/server_address.cc',
+        'src/core/ext/filters/client_channel/service_config.cc',
         'src/core/ext/filters/client_channel/subchannel.cc',
-        'src/core/ext/filters/client_channel/subchannel_index.cc',
+        'src/core/ext/filters/client_channel/subchannel_pool_interface.cc',
         'src/core/ext/filters/deadline/deadline_filter.cc',
         'src/core/ext/filters/client_channel/health/health.pb.c',
         'third_party/nanopb/pb_common.c',
@@ -2046,573 +2063,13 @@
       ],
     },
     {
-      'target_name': 'boringssl_crypto_test_data_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'src/boringssl/crypto_test_data.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_asn1_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/asn1/asn1_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_base64_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/base64/base64_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_bio_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/bio/bio_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_buf_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/buf/buf_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_bytestring_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/bytestring/bytestring_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_chacha_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/chacha/chacha_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_aead_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/cipher_extra/aead_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_cipher_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/cipher_extra/cipher_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_cmac_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/cmac/cmac_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_compiler_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/compiler_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_constant_time_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/constant_time_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ed25519_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/curve25519/ed25519_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_spake25519_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/curve25519/spake25519_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_x25519_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/curve25519/x25519_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_dh_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/dh/dh_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_digest_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/digest_extra/digest_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_dsa_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/dsa/dsa_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ecdh_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/ecdh/ecdh_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_err_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/err/err_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_evp_extra_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/evp/evp_extra_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_evp_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/evp/evp_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_pbkdf_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/evp/pbkdf_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_scrypt_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/evp/scrypt_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_aes_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/aes/aes_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_bn_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/bn/bn_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ec_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/ec/ec_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_p256-x86_64_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/ec/p256-x86_64_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ecdsa_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/ecdsa/ecdsa_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_gcm_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/modes/gcm_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ctrdrbg_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/fipsmodule/rand/ctrdrbg_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_hkdf_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/hkdf/hkdf_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_hmac_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/hmac_extra/hmac_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_lhash_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/lhash/lhash_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_obj_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/obj/obj_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_pkcs7_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/pkcs7/pkcs7_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_pkcs12_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/pkcs8/pkcs12_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_pkcs8_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/pkcs8/pkcs8_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_poly1305_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/poly1305/poly1305_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_pool_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/pool/pool_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_refcount_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/refcount_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_rsa_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/rsa_extra/rsa_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_self_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/self_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_file_test_gtest_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/test/file_test_gtest.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_gtest_main_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/test/gtest_main.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_thread_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/thread_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_x509_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/x509/x509_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_tab_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/x509v3/tab_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_v3name_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/crypto/x509v3/v3name_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_span_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/ssl/span_test.cc',
-      ],
-    },
-    {
-      'target_name': 'boringssl_ssl_test_lib',
-      'type': 'static_library',
-      'dependencies': [
-        'boringssl_test_util',
-        'boringssl',
-      ],
-      'sources': [
-        'third_party/boringssl/ssl/ssl_test.cc',
-      ],
-    },
-    {
       'target_name': 'benchmark',
       'type': 'static_library',
       'dependencies': [
       ],
       'sources': [
         'third_party/benchmark/src/benchmark.cc',
+        'third_party/benchmark/src/benchmark_main.cc',
         'third_party/benchmark/src/benchmark_register.cc',
         'third_party/benchmark/src/colorprint.cc',
         'third_party/benchmark/src/commandlineflags.cc',
@@ -2623,9 +2080,28 @@
         'third_party/benchmark/src/json_reporter.cc',
         'third_party/benchmark/src/reporter.cc',
         'third_party/benchmark/src/sleep.cc',
+        'third_party/benchmark/src/statistics.cc',
         'third_party/benchmark/src/string_util.cc',
         'third_party/benchmark/src/sysinfo.cc',
         'third_party/benchmark/src/timers.cc',
+      ],
+    },
+    {
+      'target_name': 'upb',
+      'type': 'static_library',
+      'dependencies': [
+      ],
+      'sources': [
+        'third_party/upb/google/protobuf/descriptor.upb.c',
+        'third_party/upb/upb/decode.c',
+        'third_party/upb/upb/def.c',
+        'third_party/upb/upb/encode.c',
+        'third_party/upb/upb/handlers.c',
+        'third_party/upb/upb/msg.c',
+        'third_party/upb/upb/msgfactory.c',
+        'third_party/upb/upb/sink.c',
+        'third_party/upb/upb/table.c',
+        'third_party/upb/upb/upb.c',
       ],
     },
     {
@@ -2695,6 +2171,7 @@
         'test/core/end2end/tests/empty_batch.cc',
         'test/core/end2end/tests/filter_call_init_fails.cc',
         'test/core/end2end/tests/filter_causes_close.cc',
+        'test/core/end2end/tests/filter_context.cc',
         'test/core/end2end/tests/filter_latency.cc',
         'test/core/end2end/tests/filter_status_code.cc',
         'test/core/end2end/tests/graceful_server_shutdown.cc',
@@ -2709,7 +2186,6 @@
         'test/core/end2end/tests/max_connection_idle.cc',
         'test/core/end2end/tests/max_message_length.cc',
         'test/core/end2end/tests/negative_deadline.cc',
-        'test/core/end2end/tests/network_status_change.cc',
         'test/core/end2end/tests/no_error_on_hotpath.cc',
         'test/core/end2end/tests/no_logging.cc',
         'test/core/end2end/tests/no_op.cc',
@@ -2785,6 +2261,7 @@
         'test/core/end2end/tests/empty_batch.cc',
         'test/core/end2end/tests/filter_call_init_fails.cc',
         'test/core/end2end/tests/filter_causes_close.cc',
+        'test/core/end2end/tests/filter_context.cc',
         'test/core/end2end/tests/filter_latency.cc',
         'test/core/end2end/tests/filter_status_code.cc',
         'test/core/end2end/tests/graceful_server_shutdown.cc',
@@ -2799,7 +2276,6 @@
         'test/core/end2end/tests/max_connection_idle.cc',
         'test/core/end2end/tests/max_message_length.cc',
         'test/core/end2end/tests/negative_deadline.cc',
-        'test/core/end2end/tests/network_status_change.cc',
         'test/core/end2end/tests/no_error_on_hotpath.cc',
         'test/core/end2end/tests/no_logging.cc',
         'test/core/end2end/tests/no_op.cc',

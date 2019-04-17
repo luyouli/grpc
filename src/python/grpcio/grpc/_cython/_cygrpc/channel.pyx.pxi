@@ -399,7 +399,7 @@ cdef _close(Channel channel, grpc_status_code code, object details,
       _destroy_c_completion_queue(state.c_connectivity_completion_queue)
       grpc_channel_destroy(state.c_channel)
       state.c_channel = NULL
-      grpc_shutdown()
+      grpc_shutdown_blocking()
       state.condition.notify_all()
     else:
       # Another call to close already completed in the past or is currently
@@ -420,25 +420,22 @@ cdef class Channel:
     arguments = () if arguments is None else tuple(arguments)
     fork_handlers_and_grpc_init()
     self._state = _ChannelState()
-    self._vtable.copy = &_copy_pointer
-    self._vtable.destroy = &_destroy_pointer
-    self._vtable.cmp = &_compare_pointer
-    cdef _ArgumentsProcessor arguments_processor = _ArgumentsProcessor(
-        arguments)
-    cdef grpc_channel_args *c_arguments = arguments_processor.c(&self._vtable)
-    if channel_credentials is None:
-      self._state.c_channel = grpc_insecure_channel_create(
-          <char *>target, c_arguments, NULL)
-    else:
-      c_channel_credentials = channel_credentials.c()
-      self._state.c_channel = grpc_secure_channel_create(
-          c_channel_credentials, <char *>target, c_arguments, NULL)
-      grpc_channel_credentials_release(c_channel_credentials)
     self._state.c_call_completion_queue = (
         grpc_completion_queue_create_for_next(NULL))
     self._state.c_connectivity_completion_queue = (
         grpc_completion_queue_create_for_next(NULL))
     self._arguments = arguments
+    self._vtable = _VTable()
+    cdef _ChannelArgs channel_args = _ChannelArgs(
+        arguments, self._vtable)
+    if channel_credentials is None:
+      self._state.c_channel = grpc_insecure_channel_create(
+          <char *>target, channel_args.c_args(), NULL)
+    else:
+      c_channel_credentials = channel_credentials.c()
+      self._state.c_channel = grpc_secure_channel_create(
+          c_channel_credentials, <char *>target, channel_args.c_args(), NULL)
+      grpc_channel_credentials_release(c_channel_credentials)
 
   def target(self):
     cdef char *c_target

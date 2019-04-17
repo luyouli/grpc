@@ -32,12 +32,12 @@ TEST_DIRS=(
 )
 
 VIRTUALENV=python_pylint_venv
-python -m virtualenv $VIRTUALENV
+python3 -m virtualenv $VIRTUALENV -p $(which python3)
 
 PYTHON=$VIRTUALENV/bin/python
 
-$PYTHON -m pip install --upgrade pip==10.0.1
-$PYTHON -m pip install pylint==1.9.2
+$PYTHON -m pip install --upgrade pip==18.1
+$PYTHON -m pip install --upgrade pylint==2.2.2
 
 EXIT=0
 for dir in "${DIRS[@]}"; do
@@ -47,5 +47,11 @@ done
 for dir in "${TEST_DIRS[@]}"; do
   $PYTHON -m pylint --rcfile=.pylintrc-tests -rn "$dir" || EXIT=1
 done
+
+find examples/python \
+  -iname "*.py" \
+  -not -name "*_pb2.py" \
+  -not -name "*_pb2_grpc.py" \
+  | xargs $PYTHON -m pylint --rcfile=.pylintrc-examples -rn
 
 exit $EXIT

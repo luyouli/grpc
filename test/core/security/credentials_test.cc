@@ -465,14 +465,14 @@ static void test_oauth2_google_iam_composite_creds(void) {
   google_iam_creds->Unref();
   GPR_ASSERT(strcmp(composite_creds->type(),
                     GRPC_CALL_CREDENTIALS_TYPE_COMPOSITE) == 0);
-  const grpc_call_credentials_array& creds_array =
+  const grpc_composite_call_credentials::CallCredentialsList& creds_list =
       static_cast<const grpc_composite_call_credentials*>(composite_creds)
           ->inner();
-  GPR_ASSERT(creds_array.size() == 2);
-  GPR_ASSERT(strcmp(creds_array.get(0)->type(),
-                    GRPC_CALL_CREDENTIALS_TYPE_OAUTH2) == 0);
-  GPR_ASSERT(
-      strcmp(creds_array.get(1)->type(), GRPC_CALL_CREDENTIALS_TYPE_IAM) == 0);
+  GPR_ASSERT(creds_list.size() == 2);
+  GPR_ASSERT(strcmp(creds_list[0]->type(), GRPC_CALL_CREDENTIALS_TYPE_OAUTH2) ==
+             0);
+  GPR_ASSERT(strcmp(creds_list[1]->type(), GRPC_CALL_CREDENTIALS_TYPE_IAM) ==
+             0);
   run_request_metadata_test(composite_creds, auth_md_ctx, state);
   composite_creds->Unref();
 }
@@ -492,13 +492,13 @@ class check_channel_oauth2_google_iam final : public grpc_channel_credentials {
     GPR_ASSERT(call_creds != nullptr);
     GPR_ASSERT(
         strcmp(call_creds->type(), GRPC_CALL_CREDENTIALS_TYPE_COMPOSITE) == 0);
-    const grpc_call_credentials_array& creds_array =
+    const grpc_composite_call_credentials::CallCredentialsList& creds_list =
         static_cast<const grpc_composite_call_credentials*>(call_creds.get())
             ->inner();
-    GPR_ASSERT(strcmp(creds_array.get(0)->type(),
-                      GRPC_CALL_CREDENTIALS_TYPE_OAUTH2) == 0);
-    GPR_ASSERT(strcmp(creds_array.get(1)->type(),
-                      GRPC_CALL_CREDENTIALS_TYPE_IAM) == 0);
+    GPR_ASSERT(
+        strcmp(creds_list[0]->type(), GRPC_CALL_CREDENTIALS_TYPE_OAUTH2) == 0);
+    GPR_ASSERT(strcmp(creds_list[1]->type(), GRPC_CALL_CREDENTIALS_TYPE_IAM) ==
+               0);
     return nullptr;
   }
 };
@@ -534,7 +534,7 @@ static void test_channel_oauth2_google_iam_composite_creds(void) {
 static void validate_compute_engine_http_request(
     const grpc_httpcli_request* request) {
   GPR_ASSERT(request->handshaker != &grpc_httpcli_ssl);
-  GPR_ASSERT(strcmp(request->host, "metadata.google.internal") == 0);
+  GPR_ASSERT(strcmp(request->host, "metadata.google.internal.") == 0);
   GPR_ASSERT(
       strcmp(request->http.path,
              "/computeMetadata/v1/instance/service-accounts/default/token") ==
@@ -930,7 +930,7 @@ static int default_creds_metadata_server_detection_httpcli_get_success_override(
   response->hdr_count = 1;
   response->hdrs = headers;
   GPR_ASSERT(strcmp(request->http.path, "/") == 0);
-  GPR_ASSERT(strcmp(request->host, "metadata.google.internal") == 0);
+  GPR_ASSERT(strcmp(request->host, "metadata.google.internal.") == 0);
   GRPC_CLOSURE_SCHED(on_done, GRPC_ERROR_NONE);
   return 1;
 }
@@ -1020,7 +1020,7 @@ static int default_creds_gce_detection_httpcli_get_failure_override(
     grpc_closure* on_done, grpc_httpcli_response* response) {
   /* No magic header. */
   GPR_ASSERT(strcmp(request->http.path, "/") == 0);
-  GPR_ASSERT(strcmp(request->host, "metadata.google.internal") == 0);
+  GPR_ASSERT(strcmp(request->host, "metadata.google.internal.") == 0);
   *response = http_response(200, "");
   GRPC_CLOSURE_SCHED(on_done, GRPC_ERROR_NONE);
   return 1;
