@@ -21,6 +21,10 @@
 
 #include <grpcpp/security/server_credentials_impl.h>
 
+namespace grpc_impl {
+
+class Server;
+}  // namespace grpc_impl
 namespace grpc {
 
 typedef ::grpc_impl::ServerCredentials ServerCredentials;
@@ -73,6 +77,12 @@ static inline std::shared_ptr<ServerCredentials> AltsServerCredentials(
 static inline std::shared_ptr<ServerCredentials> LocalServerCredentials(
     grpc_local_connect_type type) {
   return ::grpc_impl::experimental::LocalServerCredentials(type);
+}
+
+/// Builds TLS ServerCredentials given TLS options.
+static inline std::shared_ptr<ServerCredentials> TlsServerCredentials(
+    const ::grpc_impl::experimental::TlsCredentialsOptions& options) {
+  return ::grpc_impl::experimental::TlsServerCredentials(options);
 }
 
 }  // namespace experimental

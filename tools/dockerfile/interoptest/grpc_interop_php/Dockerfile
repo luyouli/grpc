@@ -13,7 +13,6 @@
 # limitations under the License.
 
 FROM debian:jessie
-RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
 
 
 # Install Git and basic packages.
@@ -57,7 +56,11 @@ RUN apt-get update && apt-get install -y time && apt-get clean
 # Install dependencies
 
 RUN apt-get update && apt-get install -y \
-    git php5 php5-dev phpunit unzip
+    git php5 php5-dev unzip
+
+RUN wget https://phar.phpunit.de/phpunit-5.7.27.phar && \
+  mv phpunit-5.7.27.phar /usr/local/bin/phpunit && \
+  chmod +x /usr/local/bin/phpunit
 
 
 RUN mkdir /var/local/jenkins

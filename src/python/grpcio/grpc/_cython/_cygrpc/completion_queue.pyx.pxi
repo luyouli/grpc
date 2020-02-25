@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cimport cpython
-
-import threading
-import time
 
 cdef int _INTERRUPT_CHECK_PERIOD_MS = 200
 
 
-cdef grpc_event _next(grpc_completion_queue *c_completion_queue, deadline):
+cdef grpc_event _next(grpc_completion_queue *c_completion_queue, deadline) except *:
   cdef gpr_timespec c_increment
   cdef gpr_timespec c_timeout
   cdef gpr_timespec c_deadline

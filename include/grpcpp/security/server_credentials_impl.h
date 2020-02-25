@@ -24,16 +24,17 @@
 
 #include <grpc/grpc_security_constants.h>
 #include <grpcpp/security/auth_metadata_processor.h>
+#include <grpcpp/security/tls_credentials_options.h>
 #include <grpcpp/support/config.h>
 
 struct grpc_server;
 
 namespace grpc {
 
-class Server;
 struct SslServerCredentialsOptions;
 }  // namespace grpc
 namespace grpc_impl {
+class Server;
 
 /// Wrapper around \a grpc_server_credentials, a way to authenticate a server.
 class ServerCredentials {
@@ -46,7 +47,7 @@ class ServerCredentials {
       const std::shared_ptr<grpc::AuthMetadataProcessor>& processor) = 0;
 
  private:
-  friend class ::grpc::Server;
+  friend class ::grpc_impl::Server;
 
   /// Tries to bind \a server to the given \a addr (eg, localhost:1234,
   /// 192.168.1.1:31416, [::1]:27182, etc.)
@@ -78,6 +79,10 @@ std::shared_ptr<ServerCredentials> AltsServerCredentials(
 /// Builds Local ServerCredentials.
 std::shared_ptr<ServerCredentials> LocalServerCredentials(
     grpc_local_connect_type type);
+
+/// Builds TLS ServerCredentials given TLS options.
+std::shared_ptr<ServerCredentials> TlsServerCredentials(
+    const TlsCredentialsOptions& options);
 
 }  // namespace experimental
 }  // namespace grpc_impl

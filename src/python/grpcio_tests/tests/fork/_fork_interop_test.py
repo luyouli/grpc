@@ -56,12 +56,12 @@ class ForkInteropTest(unittest.TestCase):
 
             import grpc
             from src.proto.grpc.testing import test_pb2_grpc
-            from tests.interop import methods as interop_methods
+            from tests.interop import service as interop_service
             from tests.unit import test_common
 
             server = test_common.test_server()
             test_pb2_grpc.add_TestServiceServicer_to_server(
-                interop_methods.TestService(), server)
+                interop_service.TestService(), server)
             port = server.add_insecure_port('[::]:0')
             server.start()
             print(port)
@@ -125,10 +125,9 @@ class ForkInteropTest(unittest.TestCase):
 
     def _verifyTestCase(self, test_case):
         script = _CLIENT_FORK_SCRIPT_TEMPLATE % (test_case.name, self._port)
-        process = subprocess.Popen(
-            [sys.executable, '-c', script],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+        process = subprocess.Popen([sys.executable, '-c', script],
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
         timer = threading.Timer(_SUBPROCESS_TIMEOUT_S, process.kill)
         try:
             timer.start()

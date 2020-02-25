@@ -31,6 +31,7 @@
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
+#include <grpcpp/impl/codegen/sync.h>
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
 
@@ -72,7 +73,7 @@ class BalancerServiceImpl : public LoadBalancer::Service {
   explicit BalancerServiceImpl(const std::vector<int>& all_backend_ports)
       : all_backend_ports_(all_backend_ports) {}
 
-  Status BalanceLoad(ServerContext* context, Stream* stream) override {
+  Status BalanceLoad(ServerContext* /*context*/, Stream* stream) override {
     gpr_log(GPR_INFO, "LB[%p]: Start BalanceLoad.", this);
     LoadBalanceRequest request;
     stream->Read(&request);
@@ -168,24 +169,24 @@ class ClientChannelStressTest {
     explicit ServerThread(const grpc::string& type,
                           const grpc::string& server_host, T* service)
         : type_(type), service_(service) {
-      std::mutex mu;
+      grpc::internal::Mutex mu;
       // We need to acquire the lock here in order to prevent the notify_one
       // by ServerThread::Start from firing before the wait below is hit.
-      std::unique_lock<std::mutex> lock(mu);
+      grpc::internal::MutexLock lock(&mu);
       port_ = grpc_pick_unused_port_or_die();
       gpr_log(GPR_INFO, "starting %s server on port %d", type_.c_str(), port_);
-      std::condition_variable cond;
+      grpc::internal::CondVar cond;
       thread_.reset(new std::thread(
           std::bind(&ServerThread::Start, this, server_host, &mu, &cond)));
-      cond.wait(lock);
+      cond.Wait(&mu);
       gpr_log(GPR_INFO, "%s server startup complete", type_.c_str());
     }
 
-    void Start(const grpc::string& server_host, std::mutex* mu,
-               std::condition_variable* cond) {
+    void Start(const grpc::string& server_host, grpc::internal::Mutex* mu,
+               grpc::internal::CondVar* cond) {
       // We need to acquire the lock here in order to prevent the notify_one
       // below from firing before its corresponding wait is executed.
-      std::lock_guard<std::mutex> lock(*mu);
+      grpc::internal::MutexLock lock(mu);
       std::ostringstream server_address;
       server_address << server_host << ":" << port_;
       ServerBuilder builder;
@@ -193,7 +194,7 @@ class ClientChannelStressTest {
                                InsecureServerCredentials());
       builder.RegisterService(service_);
       server_ = builder.BuildAndStart();
-      cond->notify_one();
+      cond->Signal();
     }
 
     void Shutdown() {
@@ -267,8 +268,8 @@ class ClientChannelStressTest {
                     response_generator_.get());
     std::ostringstream uri;
     uri << "fake:///servername_not_used";
-    channel_ =
-        CreateCustomChannel(uri.str(), InsecureChannelCredentials(), args);
+    channel_ = ::grpc::CreateCustomChannel(uri.str(),
+                                           InsecureChannelCredentials(), args);
     stub_ = grpc::testing::EchoTestService::NewStub(channel_);
   }
 
@@ -328,9 +329,9 @@ class ClientChannelStressTest {
 }  // namespace grpc
 
 int main(int argc, char** argv) {
-  grpc_init();
   grpc::testing::TestEnvironment env(argc, argv);
   grpc::testing::ClientChannelStressTest test;
+  grpc_init();
   test.Run();
   grpc_shutdown();
   return 0;
